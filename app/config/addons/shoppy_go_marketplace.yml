@@ -1,0 +1,3 @@
+shoppy_go_marketplace:
+#    hook_services:
+#        - { hook: '', service:'' }

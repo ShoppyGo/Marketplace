@@ -1,0 +1,7 @@
+services:
+    shoppygo.marketplace.repository.seller_repository:
+        class: ShoppyGo\MarketplaceBundle\Repository\MarketplaceEmployeeSellerRepository
+        factory:
+            - "@doctrine.orm.entity_manager"
+            - getRepository
+        arguments: [ ShoppyGo\MarketplaceBundle\Entity\MarketplaceEmployeeSeller ]

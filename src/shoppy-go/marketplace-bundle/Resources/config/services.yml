@@ -1,0 +1,32 @@
+imports:
+    - { resource: markeplace/repository.yml  }
+    - { resource: markeplace/hook.yml  }
+    - { resource: markeplace/provider.yml  }
+    - { resource: markeplace/widget.yml  }
+parameters: ~
+
+services:
+    #    -------------------
+    #    override prestashop
+    #
+    prestashop.hook.dispatcher:
+        class: PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher
+        arguments:
+            - '@request_stack'
+        calls:
+            - [ addSubscriber, [ "@prestashop.adapter.legacy.hook.subscriber" ] ]
+            - [ addSubscriber, [ "@prestashop.adapter.legacy.block.helper.subscriber" ] ]
+            - [ addSubscriber, [ "@shoppygo.event.subscriber" ] ]
+
+    shoppygo.core:
+        class: ShoppyGo\MarketplaceBundle\Classes\MarketplaceCore
+        arguments:
+            - '@doctrine'
+            - '@prestashop.core.command_bus'
+            - '@prestashop.adapter.legacy.context'
+    #
+    shoppygo.event.subscriber:
+        class: ShoppyGo\MarketplaceBundle\EventSubscriber\ShoppyGoSubscriber
+        arguments:
+            - !tagged shoppygo.hook
+

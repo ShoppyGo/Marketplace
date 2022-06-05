@@ -1,0 +1,54 @@
+{
+  "name": "shoppy/go/maketplace-bundle",
+  "type": "symfony-bundle",
+  "description": "The first open source marketplace platform based on PrestaShop.org",
+  "keywords": ["marketplace"],
+  "homepage": "https://github.com/shoppy-go/ShoppyGoMaketplaceBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Luigi Massa",
+      "email": "lmassa@bwlab.it"
+    }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "symfony/framework-bundle": ">=4.0",
+    "symfony/yaml": ">=4.0"
+  },
+  "require-dev": {
+    "symfony/phpunit-bridge": ">=4.0"
+  },
+  "config": {
+    "platform": {
+      "php": "7.2"
+    },
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "ShoppyGo\\MaketplaceBundle\\": ""
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ShoppyGo\\MaketplaceBundle\\Tests\\": "tests/"
+    }
+  },
+  "conflict": {
+    "symfony/symfony": "<4.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.1.x-dev"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
