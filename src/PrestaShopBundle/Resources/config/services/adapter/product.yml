@@ -12,6 +12,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@prestashop.adapter.image_manager"
             - "@prestashop.static_cache.adapter"
+            - "@prestashop.core.hook.dispatcher" #@TODO bug???
         public: false
 
     prestashop.adapter.admin.data_updater.product:

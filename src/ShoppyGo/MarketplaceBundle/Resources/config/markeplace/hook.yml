@@ -59,3 +59,14 @@ services:
         tags:
             - { name: 'shoppygo.hook', alias: 'actionemployeegridquerybuildermodifier' }
 
+    shoppygo.hook.action.products.results.fields.modifier:
+        class: ShoppyGo\MarketplaceBundle\HookListener\ProductsActionAdminListingResultsModifierListener
+        arguments:
+            - '@shoppygo.core'
+            - '@shoppygo.marketplace.repository.seller_repository'
+            - '@translator.default'
+        calls:
+            - [ setHooks,[ [ 'actionAdminProductsListingFieldsModifier' ] ] ]
+        tags:
+            - { name: 'shoppygo.hook', alias: 'actionadminproductslistingfieldsmodifier' }
+

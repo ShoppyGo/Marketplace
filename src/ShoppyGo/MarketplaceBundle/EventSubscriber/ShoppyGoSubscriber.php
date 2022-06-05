@@ -44,6 +44,7 @@ class ShoppyGoSubscriber implements EventSubscriberInterface
             'actionAfterUpdateEmployeeFormHandler' => 1,
             'actionEmployeeGridDefinitionModifier' => 1,
             'actionEmployeeGridQueryBuilderModifier' => 1,
+            'actionAdminProductsListingFieldsModifier' => 1,
         ];
 
         $hook_list = array();

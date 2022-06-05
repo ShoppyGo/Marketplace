@@ -51,7 +51,6 @@ class EmployeeHookActionGridQueryBuilderModifierListener extends AbstractHookLis
         if ($search_criteria->getOrderBy() === 'seller_name') {
             $search_query_builder->orderBy('mes.seller_name', $search_criteria->getOrderWay());
         }
-
         foreach ($search_criteria->getFilters() as $filtername => $filter) {
             if ($filtername === 'seller_name') {
                 $search_query_builder->andWhere('s.name like :name')

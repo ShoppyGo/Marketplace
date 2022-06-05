@@ -2,27 +2,22 @@
 
 namespace ShoppyGo\MarketplaceBundle\Classes;
 
-//use Bwlab\Marketplace\Domain\Seller\Command\ReplaceSellerCommand;
-//use Bwlab\Marketplace\Domain\Seller\Command\ReplaceShippingProductCommand;
-//use Bwlab\Marketplace\Entity\MarketplaceSeller;
-//use Bwlab\Marketplace\Provider\SupplierChoiceProvider;
-use Context;
-use Doctrine\ORM\EntityManager;
+use PrestaShop\PrestaShop\Adapter\Entity\Employee;
+use PrestaShop\PrestaShop\Adapter\Entity\Supplier;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use ShoppyGo\MarketplaceBundle\Entity\MarketplaceEmployeeSeller;
 use ShoppyGo\MarketplaceBundle\Provider\SellerChoiceProvider;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use ShoppyGo\MarketplaceBundle\Repository\MarketplaceEmployeeSellerRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class MarketplaceCore
 {
     protected static bool $execProductUpdateAfter = false;
-    protected EntityManager $entityManager;
-//    /**
-//     * @var MarketplaceSeller
-//     */
-    protected $marketplaceSeller;
+
+    protected ?MarketplaceEmployeeSeller $marketplaceSeller;
+    protected MarketplaceEmployeeSellerRepository $marketplaceEmployeeSellerRepository;
     /**
      * @var CommandBusInterface
      */
@@ -30,13 +25,16 @@ class MarketplaceCore
     private LegacyContext $legacyContext;
 
 //
-    public function __construct(RegistryInterface $registry, CommandBusInterface $bus, LegacyContext $context)
-    {
-        $this->entityManager = $registry->getEntityManager();
+    public function __construct(
+        MarketplaceEmployeeSellerRepository $marketplaceEmployeeSellerRepository,
+        CommandBusInterface $bus,
+        LegacyContext $context
+    ) {
         $this->bus = $bus;
         $this->legacyContext = $context;
 
-//        $this->setMarketplaceSeller();
+        $this->marketplaceEmployeeSellerRepository = $marketplaceEmployeeSellerRepository;
+        $this->setMarketplaceSeller();
     }
 //
 //    /**
@@ -242,18 +240,15 @@ class MarketplaceCore
 //
     public function addSelectSellerFormBuilderModifier($seller, SellerChoiceProvider $choices, $params)
     {
-
         /**
          * @var FormBuilder $form
          */
         $form = $params['form_builder'];
         $form->add(
-            'supplier',
-            ChoiceType::class,
-            array(
-                'label' => 'Seller',
+            'supplier', ChoiceType::class, array(
+                'label'   => 'Seller',
                 'choices' => $choices->getChoices(),
-                'data' => $seller ? $seller->getIdSupplier() : '',
+                'data'    => $seller ? $seller->getIdSupplier() : '',
             )
         );
     }
@@ -269,47 +264,45 @@ class MarketplaceCore
          */
         $form = $params['form_builder'];
         $form->add(
-            'seller',
-            SwitchType::class,
-            array(
-                'label' => 'Seller',
+            'seller', SwitchType::class, array(
+                'label'   => 'Seller',
                 'choices' => [
                     'OFF' => false,
-                    'ON' => true,
+                    'ON'  => true,
                 ],
-                'data' => $object ? $object->isSeller() : false,
+                'data'    => $object ? $object->isSeller() : false,
 
             )
         );
     }
+
 //
-    public function getEmployee()
+    public function getEmployee(): \Employee
     {
         return $this->legacyContext->getContext()->employee;
     }
-//
-//    public function getEmployeeId()
-//    {
-//        return Context::getContext()->employee->id;
-//    }
+
+    public function getEmployeeId(): int
+    {
+        return (int)$this->getEmployee()->id;
+    }
 //
 //    /**
 //     * @return Supplier
 //     */
-//    public function getSeller()
-//    {
-//        return new Supplier($this->marketplaceSeller->getIdSupplier());
+    public function getSeller(): Supplier
+    {
+        return new Supplier($this->marketplaceSeller->getIdSupplier());
+    }
 //
-//    }
-//
-//    /**
-//     * @return int
-//     */
-//    public function getSellerId()
-//    {
-//        return $this->marketplaceSeller->getIdSupplier();
-//
-//    }
+
+    /**
+     * @return int
+     */
+    public function getSellerId(): int
+    {
+        return (int)$this->marketplaceSeller->getIdSupplier();
+    }
 //
 //    /**
 //     * @return \Shop
@@ -327,15 +320,13 @@ class MarketplaceCore
 //     */
     public function isEmployStaff()
     {
-
         return $this->legacyContext->getContext()->employee->isSuperAdmin();
-
     }
+
 //
     public function isEmployeeSeller()
     {
         return (bool)$this->marketplaceSeller;
-
     }
 //
 //
@@ -366,11 +357,10 @@ class MarketplaceCore
 //
 //    }
 //
-//    private function setMarketplaceSeller()
-//    {
-//        $this->marketplaceSeller = $this->entityManager->getRepository(MarketplaceSeller::class)
-//            ->findOneBy(['id_employee' => $this->getEmployeeId(), 'id_shop' => $this->getShop()->id]);
-//    }
-//
-//
+    private function setMarketplaceSeller()
+    {
+        $this->marketplaceSeller =
+            $this->marketplaceEmployeeSellerRepository->findOneBy(['id_employee' => $this->getEmployeeId()]);
+    }
+
 }

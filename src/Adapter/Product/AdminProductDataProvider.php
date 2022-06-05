@@ -37,6 +37,7 @@ use Hook;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Product;
@@ -52,6 +53,10 @@ use Tools;
  */
 class AdminProductDataProvider extends AbstractAdminQueryBuilder implements ProductInterface
 {
+    /**
+     * @var HookDispatcherInterface
+     */
+    protected $hookDispatcher;
     /**
      * @var EntityManager
      */
@@ -70,11 +75,13 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function __construct(
         EntityManager $entityManager,
         ImageManager $imageManager,
-        CacheItemPoolInterface $cache
+        CacheItemPoolInterface $cache,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->imageManager = $imageManager;
         $this->cache = $cache;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -317,7 +324,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlGroupBy = [];
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsListingFieldsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -326,6 +333,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ]);
+
         foreach ($filterParams as $filterParam => $filterValue) {
             if (!$filterValue && $filterValue !== '0') {
                 continue;
@@ -348,7 +356,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlWhere[] = 'state = ' . Product::STATE_SAVED;
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsListingFieldsModifier',[
             '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -396,8 +404,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
 
         // post treatment by hooks
-        // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingResultsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsListingResultsModifier',[
             '_ps_version' => AppKernel::VERSION,
             'products' => &$products,
             'total' => $total,
