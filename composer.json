@@ -1,6 +1,6 @@
 {
-  "name": "prestashop/prestashop",
-  "description": "PrestaShop is an Open Source e-commerce platform, committed to providing the best shopping cart experience for both merchants and customers.",
+  "name": "shoppygo/shoppygo",
+  "description": "ShoppyGo is the first Open Source marketplace e-commerce platform based on PrestaShop, committed to providing the best shopping cart experience for both merchants and customers.",
   "type": "project",
   "require": {
     "php": "^7.4",
@@ -154,7 +154,7 @@
     "psr-4": {
       "PrestaShop\\PrestaShop\\": "src/",
       "PrestaShopBundle\\": "src/PrestaShopBundle/",
-      "ShoppyGo\\MarketplaceBundle\\": "src/shoppy-go/marketplace-bundle/"
+      "ShoppyGo\\MarketplaceBundle\\": "src/ShoppyGo/MarketplaceBundle/"
     },
     "classmap": [
       "app/AppKernel.php",
@@ -250,12 +250,12 @@
   },
   "authors": [
     {
-      "name": "PrestaShop SA",
-      "email": "contact@prestashop.com"
+      "name": "Bwlab",
+      "email": "info@bwlab.it"
     },
     {
-      "name": "PrestaShop Community",
-      "homepage": "https://contributors.prestashop.com/"
+      "name": "ShoppyGo Community",
+      "homepage": "https://contributors.shoppygo.io/"
     }
   ],
   "license": "OSL-3.0",
