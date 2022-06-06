@@ -29,7 +29,7 @@ class ProductsActionAdminListingResultsModifierListener extends AbstractHookList
 
     public function exec(array $params)
     {
-        if ($this->isEmployStaff()) {
+        if ($this->core->isEmployStaff()) {
             return;
         }
         $sql_table = &$params['sql_table'];

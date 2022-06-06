@@ -3,6 +3,7 @@ imports:
     - { resource: markeplace/hook.yml  }
     - { resource: markeplace/provider.yml  }
     - { resource: markeplace/widget.yml  }
+    - { resource: markeplace/override.yml  }
 parameters: ~
 
 services:

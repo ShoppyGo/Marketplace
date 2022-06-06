@@ -1,0 +1,6 @@
+services:
+    ShoppyGo\MarketplaceBundle\Controller\MarketplaceSellerProductController:
+        class: ShoppyGo\MarketplaceBundle\Controller\MarketplaceSellerProductController
+        decorates: PrestaShopBundle\Controller\Admin\ProductController
+        arguments: [ '@ShoppyGo\MarketplaceBundle\Controller\MarketplaceSellerProductController.inner' ]
+    #    public: true
