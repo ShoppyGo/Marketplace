@@ -301,7 +301,7 @@ class MarketplaceCore
      */
     public function getSellerId(): int
     {
-        return (int)$this->marketplaceSeller->getIdSupplier();
+        return (int)$this->marketplaceSeller->getIdSeller();
     }
 //
 //    /**
